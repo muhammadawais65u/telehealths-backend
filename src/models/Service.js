@@ -62,6 +62,68 @@ const Service = sequelize.define('Service', {
       }
     }
   },
+  // Service-specific fields
+  badge: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  heroDescription: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'hero_description'
+  },
+  tags: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  stats: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  overview: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  overviewFeatures: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  eligibility: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  process: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  platform: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  keyStats: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  billingCodes: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  whyCCN: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  complianceNotes: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  commonMistakes: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  faqs: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
   status: {
     type: DataTypes.ENUM('draft', 'published'),
     defaultValue: 'draft',

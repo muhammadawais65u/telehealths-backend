@@ -124,7 +124,30 @@ export const createService = async (req, res) => {
       return errorResponse(res, 'Validation failed', 400, errors.array());
     }
 
-    const { title, metaTitle, metaDescription, keywords, shortDescription, content, status } = req.body;
+    const { 
+      title, 
+      metaTitle, 
+      metaDescription, 
+      keywords, 
+      shortDescription, 
+      content, 
+      status,
+      badge,
+      heroDescription,
+      tags,
+      stats,
+      overview,
+      overviewFeatures,
+      eligibility,
+      process,
+      platform,
+      keyStats,
+      billingCodes,
+      whyCCN,
+      complianceNotes,
+      commonMistakes,
+      faqs
+    } = req.body;
     const image = req.file ? req.file.filename : null;
 
     // Get existing slugs to ensure uniqueness
@@ -145,7 +168,22 @@ export const createService = async (req, res) => {
       shortDescription,
       content,
       status: status || 'draft',
-      userId: req.user.id
+      userId: req.user.id,
+      badge,
+      heroDescription,
+      tags,
+      stats: stats ? JSON.parse(stats) : null,
+      overview,
+      overviewFeatures: overviewFeatures ? JSON.parse(overviewFeatures) : null,
+      eligibility: eligibility ? JSON.parse(eligibility) : null,
+      process: process ? JSON.parse(process) : null,
+      platform: platform ? JSON.parse(platform) : null,
+      keyStats: keyStats ? JSON.parse(keyStats) : null,
+      billingCodes: billingCodes ? JSON.parse(billingCodes) : null,
+      whyCCN: whyCCN ? JSON.parse(whyCCN) : null,
+      complianceNotes: complianceNotes ? JSON.parse(complianceNotes) : null,
+      commonMistakes: commonMistakes ? JSON.parse(commonMistakes) : null,
+      faqs: faqs ? JSON.parse(faqs) : null
     });
 
     // Fetch the created service with author
@@ -178,7 +216,30 @@ export const updateService = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { title, metaTitle, metaDescription, keywords, shortDescription, content, status } = req.body;
+    const { 
+      title, 
+      metaTitle, 
+      metaDescription, 
+      keywords, 
+      shortDescription, 
+      content, 
+      status,
+      badge,
+      heroDescription,
+      tags,
+      stats,
+      overview,
+      overviewFeatures,
+      eligibility,
+      process,
+      platform,
+      keyStats,
+      billingCodes,
+      whyCCN,
+      complianceNotes,
+      commonMistakes,
+      faqs
+    } = req.body;
 
     // Find service
     const service = await Service.findByPk(id);
@@ -213,7 +274,22 @@ export const updateService = async (req, res) => {
       image: req.file ? req.file.filename : service.image,
       shortDescription: shortDescription !== undefined ? shortDescription : service.shortDescription,
       content: content || service.content,
-      status: status || service.status
+      status: status || service.status,
+      badge: badge !== undefined ? badge : service.badge,
+      heroDescription: heroDescription !== undefined ? heroDescription : service.heroDescription,
+      tags: tags !== undefined ? tags : service.tags,
+      stats: stats !== undefined ? JSON.parse(stats) : service.stats,
+      overview: overview !== undefined ? overview : service.overview,
+      overviewFeatures: overviewFeatures !== undefined ? JSON.parse(overviewFeatures) : service.overviewFeatures,
+      eligibility: eligibility !== undefined ? JSON.parse(eligibility) : service.eligibility,
+      process: process !== undefined ? JSON.parse(process) : service.process,
+      platform: platform !== undefined ? JSON.parse(platform) : service.platform,
+      keyStats: keyStats !== undefined ? JSON.parse(keyStats) : service.keyStats,
+      billingCodes: billingCodes !== undefined ? JSON.parse(billingCodes) : service.billingCodes,
+      whyCCN: whyCCN !== undefined ? JSON.parse(whyCCN) : service.whyCCN,
+      complianceNotes: complianceNotes !== undefined ? JSON.parse(complianceNotes) : service.complianceNotes,
+      commonMistakes: commonMistakes !== undefined ? JSON.parse(commonMistakes) : service.commonMistakes,
+      faqs: faqs !== undefined ? JSON.parse(faqs) : service.faqs
     });
 
     // Fetch updated service with author
