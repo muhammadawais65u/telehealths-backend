@@ -12,7 +12,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    logging: false, // Turned off SQL logging to clean up console
     pool: {
       max: 10,
       min: 0,
@@ -34,9 +34,11 @@ const testConnection = async () => {
 };
 
 // Sync database models
-const syncDatabase = async (force = false) => {
+const syncDatabase = async (forceSync = false) => {
   try {
-    await sequelize.sync({ force });
+    // If forceSync is true, we use alter: true to update schema without dropping data.
+    // If you explicitly want to drop tables, use force: true, but it's dangerous!
+    await sequelize.sync({ alter: forceSync, force: false });
     console.log('✅ Database synchronized successfully.');
   } catch (error) {
     console.error('❌ Error synchronizing database:', error.message);

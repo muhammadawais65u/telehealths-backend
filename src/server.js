@@ -24,6 +24,7 @@ const startServer = async () => {
       console.log(`📡 Server listening on port ${PORT}`);
       console.log(`🌐 API URL: http://localhost:${PORT}`);
       console.log(`📚 API Docs: http://localhost:${PORT}/api/health`);
+      console.log(`✅ Backend successfully connected and listening.`);
       console.log('=================================');
     });
   } catch (error) {
