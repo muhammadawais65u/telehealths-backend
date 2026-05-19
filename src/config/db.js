@@ -3,24 +3,44 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Database configuration
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD || null,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 3306,
-    dialect: 'mysql',
-    logging: false, // Turned off SQL logging to clean up console
-    pool: {
-      max: 10,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    }
-  }
-);
+// Helper to ignore un-evaluated Railway template strings
+const getEnvVal = (val, fallback) => {
+  return (val && !val.includes('${{')) ? val : fallback;
+};
+
+const connectionString = 
+  getEnvVal(process.env.MYSQL_PUBLIC_URL, null) || 
+  getEnvVal(process.env.MYSQL_URL, null) || 
+  getEnvVal(process.env.DATABASE_URL, null);
+
+const sequelize = connectionString
+  ? new Sequelize(connectionString, {
+      dialect: 'mysql',
+      logging: false,
+      pool: {
+        max: 10,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      }
+    })
+  : new Sequelize(
+      getEnvVal(process.env.MYSQL_DATABASE, process.env.DB_NAME) || 'railway',
+      getEnvVal(process.env.MYSQLUSER, process.env.DB_USER) || 'root',
+      getEnvVal(process.env.MYSQLPASSWORD, process.env.DB_PASSWORD) || null,
+      {
+        host: getEnvVal(process.env.MYSQLHOST, process.env.DB_HOST) || '127.0.0.1',
+        port: getEnvVal(process.env.MYSQLPORT, process.env.DB_PORT) || 3306,
+        dialect: 'mysql',
+        logging: false,
+        pool: {
+          max: 10,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        }
+      }
+    );
 
 // Test database connection
 const testConnection = async () => {
