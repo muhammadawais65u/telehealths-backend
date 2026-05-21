@@ -19,15 +19,15 @@ const router = express.Router();
 // @access  Public
 router.get('/', getAllServices);
 
-// @route   GET /api/services/:slug
-// @desc    Get single service by slug
-// @access  Public
-router.get('/:slug', getServiceBySlug);
-
 // @route   GET /api/services/id/:id
 // @desc    Get single service by ID (for editing)
 // @access  Private
 router.get('/id/:id', protect, getServiceById);
+
+// @route   GET /api/services/:slug
+// @desc    Get single service by slug
+// @access  Public
+router.get('/:slug', getServiceBySlug);
 
 // @route   POST /api/services
 // @desc    Create new service
