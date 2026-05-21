@@ -1,6 +1,5 @@
 import { body, validationResult } from 'express-validator';
-import Service from '../models/Service.js';
-import User from '../models/User.js';
+import { Service, User } from '../models/index.js';
 import { Op } from 'sequelize';
 import { generateUniqueSlug } from '../utils/generateSlug.js';
 import { successResponse, createdResponse, notFoundResponse, errorResponse, paginatedResponse } from '../utils/responseHandler.js';
@@ -126,6 +125,7 @@ export const createService = async (req, res) => {
 
     const { 
       title, 
+      slug: reqSlug,
       metaTitle, 
       metaDescription, 
       keywords, 
@@ -155,7 +155,7 @@ export const createService = async (req, res) => {
     const existingSlugs = existingServices.map(service => service.slug);
 
     // Generate unique slug
-    const slug = generateUniqueSlug(title, existingSlugs);
+    const slug = generateUniqueSlug(reqSlug || title, existingSlugs);
 
     // Create service
     const service = await Service.create({
@@ -218,6 +218,7 @@ export const updateService = async (req, res) => {
     const { id } = req.params;
     const { 
       title, 
+      slug: reqSlug,
       metaTitle, 
       metaDescription, 
       keywords, 
@@ -253,9 +254,16 @@ export const updateService = async (req, res) => {
       return errorResponse(res, 'Not authorized to update this service', 403);
     }
 
-    // Update slug if title changed
+    // Update slug if title or slug changed
     let slug = service.slug;
-    if (title && title !== service.title) {
+    if (reqSlug && reqSlug !== service.slug) {
+      const existingServices = await Service.findAll({
+        where: { id: { [Op.ne]: id } },
+        attributes: ['slug']
+      });
+      const existingSlugs = existingServices.map(s => s.slug);
+      slug = generateUniqueSlug(reqSlug, existingSlugs);
+    } else if (title && title !== service.title && !reqSlug) {
       const existingServices = await Service.findAll({
         where: { id: { [Op.ne]: id } },
         attributes: ['slug']

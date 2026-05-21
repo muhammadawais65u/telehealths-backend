@@ -1,6 +1,5 @@
 import { body, validationResult } from 'express-validator';
-import Blog from '../models/Blog.js';
-import User from '../models/User.js';
+import { Blog, User } from '../models/index.js';
 import { Op } from 'sequelize';
 import { generateUniqueSlug } from '../utils/generateSlug.js';
 import { successResponse, createdResponse, notFoundResponse, errorResponse, paginatedResponse } from '../utils/responseHandler.js';
