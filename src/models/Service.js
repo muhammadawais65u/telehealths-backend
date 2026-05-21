@@ -80,6 +80,11 @@ const Service = sequelize.define('Service', {
     type: DataTypes.JSON,
     allowNull: true
   },
+  overviewTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'overview_title'
+  },
   overview: {
     type: DataTypes.TEXT,
     allowNull: true

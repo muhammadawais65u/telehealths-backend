@@ -14,6 +14,7 @@ const serviceData = {
   badge: "Medicare Programs",
   heroDescription: "Real-time vital sign monitoring with FDA-cleared cellular devices. Generate $175–220 per patient per month with automated compliance tracking and documentation.",
   tags: JSON.stringify(["FDA Cleared Devices", "Cellular Connectivity", "6 CPT Codes", "Zero Upfront Cost"]),
+  overviewTitle: "Remote Patient Monitoring Overview",
   stats: JSON.stringify([
     { value: "$175–220", label: "Monthly Revenue Per Patient" },
     { value: "6", label: "Billable CPT Codes" },
