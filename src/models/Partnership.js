@@ -80,6 +80,11 @@ const Partnership = sequelize.define('Partnership', {
     allowNull: true,
     field: 'cta_secondary_url'
   },
+  challengeTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'challenge_title'
+  },
   challengeIntro: {
     type: DataTypes.TEXT,
     allowNull: true,
@@ -90,6 +95,11 @@ const Partnership = sequelize.define('Partnership', {
     allowNull: true,
     field: 'challenge_points'
   },
+  solutionTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'solution_title'
+  },
   solutionIntro: {
     type: DataTypes.TEXT,
     allowNull: true,
@@ -99,6 +109,11 @@ const Partnership = sequelize.define('Partnership', {
     type: DataTypes.JSON,
     allowNull: true,
     field: 'solution_features'
+  },
+  whyPartnerTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'why_partner_title'
   },
   resultsMetric: {
     type: DataTypes.STRING(255),
@@ -123,6 +138,16 @@ const Partnership = sequelize.define('Partnership', {
     type: DataTypes.JSON,
     allowNull: true,
     field: 'why_scales'
+  },
+  scalabilityTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'scalability_title'
+  },
+  partnersGetTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'partners_get_title'
   },
   partnersGet: {
     type: DataTypes.JSON,
