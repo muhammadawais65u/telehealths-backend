@@ -1,6 +1,7 @@
 import User from './User.js';
 import Blog from './Blog.js';
 import Service from './Service.js';
+import Partnership from './Partnership.js';
 import BlogCategory from './BlogCategory.js';
 
 // Define associations
@@ -37,4 +38,4 @@ Blog.belongsTo(BlogCategory, {
   as: 'category'
 });
 
-export { User, Blog, Service, BlogCategory };
+export { User, Blog, Service, Partnership, BlogCategory };

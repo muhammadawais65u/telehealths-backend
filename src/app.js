@@ -7,6 +7,7 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
+import partnershipRoutes from './routes/partnershipRoutes.js';
 import blogCategoryRoutes from './routes/blogCategoryRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -50,6 +51,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/partnerships', partnershipRoutes);
 app.use('/api/blog-categories', blogCategoryRoutes);
 
 // Health check route
@@ -71,6 +73,7 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       blogs: '/api/blogs',
       services: '/api/services',
+      partnerships: '/api/partnerships',
       blogCategories: '/api/blog-categories',
       health: '/api/health'
     }
