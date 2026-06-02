@@ -95,6 +95,11 @@ const Partnership = sequelize.define('Partnership', {
     allowNull: true,
     field: 'challenge_points'
   },
+  challengeBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'challenge_badge_text'
+  },
   solutionTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
@@ -110,10 +115,20 @@ const Partnership = sequelize.define('Partnership', {
     allowNull: true,
     field: 'solution_features'
   },
+  solutionBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'solution_badge_text'
+  },
   whyPartnerTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
     field: 'why_partner_title'
+  },
+  whyPartnerBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'why_partner_badge_text'
   },
   resultsMetric: {
     type: DataTypes.STRING(255),
@@ -130,6 +145,11 @@ const Partnership = sequelize.define('Partnership', {
     allowNull: true,
     field: 'results_description'
   },
+  resultsBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'results_badge_text'
+  },
   reasons: {
     type: DataTypes.JSON,
     allowNull: true
@@ -144,6 +164,11 @@ const Partnership = sequelize.define('Partnership', {
     allowNull: true,
     field: 'scalability_title'
   },
+  scalabilityBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'scalability_badge_text'
+  },
   partnersGetTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
@@ -153,6 +178,11 @@ const Partnership = sequelize.define('Partnership', {
     type: DataTypes.JSON,
     allowNull: true,
     field: 'partners_get'
+  },
+  partnersGetBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'partners_get_badge_text'
   },
   finalCtaTitle: {
     type: DataTypes.STRING(255),
@@ -183,6 +213,11 @@ const Partnership = sequelize.define('Partnership', {
     type: DataTypes.STRING(500),
     allowNull: true,
     field: 'final_cta_secondary_url'
+  },
+  finalCtaBadgeText: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'final_cta_badge_text'
   },
   trustFounder: {
     type: DataTypes.STRING(255),
