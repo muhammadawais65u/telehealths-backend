@@ -9,6 +9,7 @@ import blogRoutes from './routes/blogRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import partnershipRoutes from './routes/partnershipRoutes.js';
 import blogCategoryRoutes from './routes/blogCategoryRoutes.js';
+import discoveryCallRoutes from './routes/discoveryCallRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +54,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/partnerships', partnershipRoutes);
 app.use('/api/blog-categories', blogCategoryRoutes);
+app.use('/api/discovery-calls', discoveryCallRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -75,6 +77,7 @@ app.get('/', (req, res) => {
       services: '/api/services',
       partnerships: '/api/partnerships',
       blogCategories: '/api/blog-categories',
+      discoveryCalls: '/api/discovery-calls',
       health: '/api/health'
     }
   });

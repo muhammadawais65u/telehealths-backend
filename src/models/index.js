@@ -3,6 +3,7 @@ import Blog from './Blog.js';
 import Service from './Service.js';
 import Partnership from './Partnership.js';
 import BlogCategory from './BlogCategory.js';
+import DiscoveryCall from './DiscoveryCall.js';
 
 // Define associations
 User.hasMany(Blog, {
@@ -38,4 +39,4 @@ Blog.belongsTo(BlogCategory, {
   as: 'category'
 });
 
-export { User, Blog, Service, Partnership, BlogCategory };
+export { User, Blog, Service, Partnership, BlogCategory, DiscoveryCall };
