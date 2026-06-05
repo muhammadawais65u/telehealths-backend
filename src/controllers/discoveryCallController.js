@@ -7,6 +7,7 @@ import {
   paginatedResponse,
   notFoundResponse
 } from '../utils/responseHandler.js';
+import { sendEmail } from '../utils/email.js';
 
 export const discoveryCallValidation = [
   body('name').notEmpty().withMessage('Name is required'),
@@ -77,6 +78,65 @@ export const createDiscoveryCall = async (req, res) => {
       phone,
       message: message || null
     });
+
+    // Send email to user
+    const userEmailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #2563eb;">Thank you for your interest in Health Shield</h2>
+        <p>Hi ${name},</p>
+        <p>Thank you for booking a discovery call with us. We have received your information and our care team will reach out to you shortly.</p>
+        <p><strong>Your Details:</strong></p>
+        <ul>
+          <li><strong>Name:</strong> ${name}</li>
+          <li><strong>Email:</strong> ${email}</li>
+          <li><strong>Phone:</strong> ${phone}</li>
+          ${message ? `<li><strong>Message:</strong> ${message}</li>` : ''}
+        </ul>
+        <p>One of our care advisors will contact you within 24-48 hours to schedule your free 15-minute discovery call.</p>
+        <p>If you have any questions, feel free to reply to this email.</p>
+        <p>Best regards,<br>The Health Shield Team</p>
+      </div>
+    `;
+
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'Your Discovery Call Request - Health Shield',
+        html: userEmailHtml
+      });
+    } catch (emailError) {
+      console.error('Error sending user email:', emailError);
+      // Don't fail the request if email fails
+    }
+
+    // Send email to admin
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@ccnhealth.com';
+    const adminEmailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #2563eb;">New Discovery Call Request</h2>
+        <p>A new discovery call has been requested on the website.</p>
+        <p><strong>User Details:</strong></p>
+        <ul>
+          <li><strong>Name:</strong> ${name}</li>
+          <li><strong>Email:</strong> ${email}</li>
+          <li><strong>Phone:</strong> ${phone}</li>
+          ${message ? `<li><strong>Message:</strong> ${message}</li>` : ''}
+          <li><strong>Submitted At:</strong> ${new Date().toLocaleString()}</li>
+        </ul>
+        <p>Please reach out to the user to schedule their discovery call.</p>
+      </div>
+    `;
+
+    try {
+      await sendEmail({
+        to: adminEmail,
+        subject: `New Discovery Call Request - ${name}`,
+        html: adminEmailHtml
+      });
+    } catch (emailError) {
+      console.error('Error sending admin email:', emailError);
+      // Don't fail the request if email fails
+    }
 
     return createdResponse(res, call, 'Discovery call booked successfully');
   } catch (error) {
