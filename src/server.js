@@ -15,7 +15,8 @@ const startServer = async () => {
     await testConnection();
 
     // Sync database models (set force to true only in development to drop and recreate tables)
-    await syncDatabase(NODE_ENV === 'development' && process.env.DB_SYNC === 'true');
+    // Temporarily disabled due to "Too many keys specified" error
+    // await syncDatabase(NODE_ENV === 'development' && process.env.DB_SYNC === 'true');
 
     // Start listening
     app.listen(PORT, () => {
@@ -45,5 +46,5 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-// Start the server
+// Start the server now
 startServer();
