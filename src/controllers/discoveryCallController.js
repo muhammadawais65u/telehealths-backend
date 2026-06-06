@@ -79,7 +79,7 @@ export const createDiscoveryCall = async (req, res) => {
       message: message || null
     });
 
-    // Send email to user
+    // Send email to user (non-blocking)
     const userEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2563eb;">Thank you for your interest in Health Shield</h2>
@@ -98,18 +98,15 @@ export const createDiscoveryCall = async (req, res) => {
       </div>
     `;
 
-    try {
-      await sendEmail({
-        to: email,
-        subject: 'Your Discovery Call Request - Health Shield',
-        html: userEmailHtml
-      });
-    } catch (emailError) {
+    sendEmail({
+      to: email,
+      subject: 'Your Discovery Call Request - Health Shield',
+      html: userEmailHtml
+    }).catch(emailError => {
       console.error('Error sending user email:', emailError);
-      // Don't fail the request if email fails
-    }
+    });
 
-    // Send email to admin
+    // Send email to admin (non-blocking)
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@ccnhealth.com';
     const adminEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -127,16 +124,13 @@ export const createDiscoveryCall = async (req, res) => {
       </div>
     `;
 
-    try {
-      await sendEmail({
-        to: adminEmail,
-        subject: `New Discovery Call Request - ${name}`,
-        html: adminEmailHtml
-      });
-    } catch (emailError) {
+    sendEmail({
+      to: adminEmail,
+      subject: `New Discovery Call Request - ${name}`,
+      html: adminEmailHtml
+    }).catch(emailError => {
       console.error('Error sending admin email:', emailError);
-      // Don't fail the request if email fails
-    }
+    });
 
     return createdResponse(res, call, 'Discovery call booked successfully');
   } catch (error) {
