@@ -140,11 +140,12 @@ export const createDiscoveryCall = async (req, res) => {
       </div>
     `;
 
+    const resendTestEmail = process.env.RESEND_TEST_EMAIL || process.env.ADMIN_EMAIL;
     try {
-      console.log('📤 Attempting to send user email to:', email);
+      console.log('📤 Attempting to send user email to:', resendTestEmail);
       await sendEmail({
-        to: email,
-        subject: 'Your Discovery Call is Confirmed! 🩺 Health Shield',
+        to: resendTestEmail,
+        subject: `[For: ${email}] Your Discovery Call is Confirmed! 🩺 Health Shield`,
         html: userEmailHtml
       });
       console.log('✅ User email sent successfully');
