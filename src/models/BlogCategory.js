@@ -59,14 +59,6 @@ const BlogCategory = sequelize.define('BlogCategory', {
   timestamps: true,
   indexes: [
     {
-      unique: true,
-      fields: ['name']
-    },
-    {
-      unique: true,
-      fields: ['slug']
-    },
-    {
       fields: ['status']
     }
   ]
