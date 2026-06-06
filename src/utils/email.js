@@ -1,34 +1,20 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-console.log("📧 Email config loaded:", {
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  user: process.env.EMAIL_USER,
-  passSet: !!process.env.EMAIL_PASS,
-});
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (options) => {
-  try {
-    const mailOptions = {
-      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-      to: options.to,
-      subject: options.subject,
-      html: options.html,
-    };
+  const { data, error } = await resend.emails.send({
+    from: process.env.EMAIL_FROM || "Health Shield <onboarding@resend.dev>",
+    to: [options.to],
+    subject: options.subject,
+    html: options.html,
+  });
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent:", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("Error sending email:", error);
-    throw error;
+  if (error) {
+    console.error("❌ Resend error:", error);
+    throw new Error(error.message);
   }
+
+  console.log("✅ Email sent via Resend:", data.id);
+  return data;
 };
