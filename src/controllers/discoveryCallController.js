@@ -77,11 +77,11 @@ export const createDiscoveryCall = async (req, res) => {
         </div>
       </div>`;
 
+    sendEmail({ to: email, subject: 'Your Discovery Call is Confirmed! 🩺 Health Shield', html: userHtml })
+      .catch(err => console.error('❌ User email failed:', err.message));
+
     sendEmail({ to: adminEmail, subject: `New Lead: ${name} - Health Shield`, html: adminHtml })
       .catch(err => console.error('❌ Admin email failed:', err.message));
-
-    sendEmail({ to: adminEmail, subject: `[User Confirmation for: ${email}] Discovery Call Booked`, html: userHtml })
-      .catch(err => console.error('❌ User email failed:', err.message));
 
     return createdResponse(res, call, 'Discovery call booked successfully');
   } catch (error) {
