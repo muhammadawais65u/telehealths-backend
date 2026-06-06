@@ -140,13 +140,17 @@ export const createDiscoveryCall = async (req, res) => {
       </div>
     `;
 
-    sendEmail({
-      to: email,
-      subject: 'Your Discovery Call is Confirmed! 🩺 Health Shield',
-      html: userEmailHtml
-    }).catch(emailError => {
-      console.error('Error sending user email:', emailError);
-    });
+    try {
+      console.log('📤 Attempting to send user email to:', email);
+      await sendEmail({
+        to: email,
+        subject: 'Your Discovery Call is Confirmed! 🩺 Health Shield',
+        html: userEmailHtml
+      });
+      console.log('✅ User email sent successfully');
+    } catch (emailError) {
+      console.error('❌ User email failed:', emailError.message, emailError.code);
+    }
 
     // Send email to admin (non-blocking)
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@ccnhealth.com';
@@ -197,13 +201,17 @@ export const createDiscoveryCall = async (req, res) => {
       </div>
     `;
 
-    sendEmail({
-      to: adminEmail,
-      subject: `New Lead: ${name} - Health Shield`,
-      html: adminEmailHtml
-    }).catch(emailError => {
-      console.error('Error sending admin email:', emailError);
-    });
+    try {
+      console.log('📤 Attempting to send admin email to:', adminEmail);
+      await sendEmail({
+        to: adminEmail,
+        subject: `New Lead: ${name} - Health Shield`,
+        html: adminEmailHtml
+      });
+      console.log('✅ Admin email sent successfully');
+    } catch (emailError) {
+      console.error('❌ Admin email failed:', emailError.message, emailError.code);
+    }
 
     return createdResponse(res, call, 'Discovery call booked successfully');
   } catch (error) {
