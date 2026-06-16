@@ -16,7 +16,7 @@ const sync = async () => {
     console.log('Roles and permissions seeded successfully!');
     
     console.log('Syncing database...');
-    await sequelize.sync({ alter: false });
+    await sequelize.sync({ alter: true });
     console.log('Database synced successfully!');
     
     process.exit(0);
