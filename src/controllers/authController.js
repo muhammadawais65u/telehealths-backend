@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
 import User from '../models/User.js';
+import Role from '../models/Role.js';
+import Permission from '../models/Permission.js';
 import { successResponse, createdResponse, errorResponse } from '../utils/responseHandler.js';
 
 // Generate JWT Token
@@ -22,7 +24,7 @@ export const signup = async (req, res) => {
       return errorResponse(res, 'Validation failed', 400, errors.array());
     }
 
-    const { name, email, phone, password, role } = req.body;
+    const { name, email, phone, password, roleId } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
@@ -34,24 +36,26 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
+    // Create user with roleId (default to client role id 3 if not provided)
     const user = await User.create({
       name,
       email,
       phone,
       password: hashedPassword,
-      role: role || 'client'
+      roleId: roleId || 3
+    });
+
+    // Fetch user with role
+    const userWithRole = await User.findByPk(user.id, {
+      include: [{ model: Role, as: 'role' }],
+      attributes: { exclude: ['password'] }
     });
 
     // Generate token
     const token = generateToken(user.id);
 
-    // Remove password from response
-    const userResponse = user.toJSON();
-    delete userResponse.password;
-
     return createdResponse(res, {
-      user: userResponse,
+      user: userWithRole,
       token
     }, 'User registered successfully');
   } catch (error) {
@@ -73,8 +77,18 @@ export const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Check if user exists
-    const user = await User.findOne({ where: { email } });
+    // Check if user exists with role and permissions
+    const user = await User.findOne({ 
+      where: { email },
+      include: [
+        { 
+          model: Role, 
+          as: 'role',
+          include: [{ model: Permission, as: 'permissions' }]
+        }
+      ]
+    });
+    
     if (!user) {
       return errorResponse(res, 'Invalid credentials', 401);
     }
@@ -92,8 +106,12 @@ export const login = async (req, res) => {
     const userResponse = user.toJSON();
     delete userResponse.password;
 
+    // Extract permissions array
+    const permissions = userResponse.role?.permissions?.map(p => p.name) || [];
+
     return successResponse(res, {
       user: userResponse,
+      permissions,
       token
     }, 'Login successful');
   } catch (error) {
@@ -108,14 +126,27 @@ export const login = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: { exclude: ['password'] }
+      attributes: { exclude: ['password'] },
+      include: [
+        { 
+          model: Role, 
+          as: 'role',
+          include: [{ model: Permission, as: 'permissions' }]
+        }
+      ]
     });
 
     if (!user) {
       return errorResponse(res, 'User not found', 404);
     }
 
-    return successResponse(res, user, 'User retrieved successfully');
+    const userResponse = user.toJSON();
+    const permissions = userResponse.role?.permissions?.map(p => p.name) || [];
+
+    return successResponse(res, {
+      user: userResponse,
+      permissions
+    }, 'User retrieved successfully');
   } catch (error) {
     console.error('Get me error:', error);
     return errorResponse(res, error.message || 'Error retrieving user', 500);
@@ -173,3 +204,23 @@ export const loginValidation = [
   body('password')
     .notEmpty().withMessage('Password is required')
 ];
+
+export const getAdminUsers = async (req, res) => {
+  try {
+    const admins = await User.findAll({
+      include: [
+        {
+          model: Role,
+          as: 'role',
+          where: { name: 'admin' },
+          attributes: []
+        }
+      ],
+      attributes: ['id', 'name', 'email'],
+      order: [['name', 'ASC']]
+    });
+    return successResponse(res, admins, 'Admin users retrieved successfully');
+  } catch (error) {
+    return errorResponse(res, error.message || 'Error retrieving admin users', 500);
+  }
+};

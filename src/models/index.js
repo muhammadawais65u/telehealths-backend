@@ -3,7 +3,11 @@ import Blog from './Blog.js';
 import Service from './Service.js';
 import Partnership from './Partnership.js';
 import BlogCategory from './BlogCategory.js';
-import DiscoveryCall from './DiscoveryCall.js';
+import Lead from './Lead.js';
+import Role from './Role.js';
+import Permission from './Permission.js';
+import RolePermission from './RolePermission.js';
+import Device from './Device.js';
 
 // Define associations
 User.hasMany(Blog, {
@@ -28,6 +32,17 @@ Service.belongsTo(User, {
   as: 'author'
 });
 
+User.hasMany(Device, {
+  foreignKey: 'userId',
+  as: 'devices',
+  onDelete: 'CASCADE'
+});
+
+Device.belongsTo(User, {
+  foreignKey: 'userId',
+  as: 'author'
+});
+
 BlogCategory.hasMany(Blog, {
   foreignKey: 'categoryId',
   as: 'blogs',
@@ -39,4 +54,17 @@ Blog.belongsTo(BlogCategory, {
   as: 'category'
 });
 
-export { User, Blog, Service, Partnership, BlogCategory, DiscoveryCall };
+// Role associations
+Role.belongsToMany(Permission, {
+  through: RolePermission,
+  foreignKey: 'roleId',
+  as: 'permissions'
+});
+
+Permission.belongsToMany(Role, {
+  through: RolePermission,
+  foreignKey: 'permissionId',
+  as: 'roles'
+});
+
+export { User, Blog, Service, Partnership, BlogCategory, Lead, Role, Permission, RolePermission, Device };

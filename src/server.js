@@ -14,9 +14,8 @@ const startServer = async () => {
     // Test database connection
     await testConnection();
 
-    // Sync database models (set force to true only in development to drop and recreate tables)
-    // Temporarily disabled due to "Too many keys specified" error
-    // await syncDatabase(NODE_ENV === 'development' && process.env.DB_SYNC === 'true');
+    // Sync database models when DB_SYNC=true. This applies alter mode without dropping tables.
+    await syncDatabase(process.env.DB_SYNC === 'true');
 
     // Start listening
     app.listen(PORT, () => {

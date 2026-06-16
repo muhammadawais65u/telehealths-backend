@@ -9,8 +9,12 @@ import blogRoutes from './routes/blogRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import partnershipRoutes from './routes/partnershipRoutes.js';
 import blogCategoryRoutes from './routes/blogCategoryRoutes.js';
-import discoveryCallRoutes from './routes/discoveryCallRoutes.js';
-
+import leadRoutes from './routes/leadRoutes.js';
+import employeeRoutes from './routes/employeeRoutes.js';
+import roleRoutes from './routes/roleRoutes.js';
+import permissionRoutes from './routes/permissionRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import deviceRoutes from './routes/deviceRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -54,7 +58,12 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/partnerships', partnershipRoutes);
 app.use('/api/blog-categories', blogCategoryRoutes);
-app.use('/api/discovery-calls', discoveryCallRoutes);
+app.use('/api/employees', employeeRoutes);
+app.use('/api/leads', leadRoutes);
+app.use('/api/roles', roleRoutes);
+app.use('/api/permissions', permissionRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/devices', deviceRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -76,8 +85,12 @@ app.get('/', (req, res) => {
       blogs: '/api/blogs',
       services: '/api/services',
       partnerships: '/api/partnerships',
+      leads: '/api/leads',
+      employees: '/api/employees',
+      roles: '/api/roles',
+      permissions: '/api/permissions',
       blogCategories: '/api/blog-categories',
-      discoveryCalls: '/api/discovery-calls',
+      devices: '/api/devices',
       health: '/api/health'
     }
   });

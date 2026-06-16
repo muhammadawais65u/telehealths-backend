@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js';
+import Role from './Role.js';
 
 const User = sequelize.define('User', {
   id: {
@@ -59,9 +60,13 @@ const User = sequelize.define('User', {
       }
     }
   },
-  role: {
-    type: DataTypes.ENUM('admin', 'client'),
-    defaultValue: 'client',
+  roleId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
     allowNull: false
   }
 }, {
@@ -73,6 +78,17 @@ const User = sequelize.define('User', {
       fields: ['email']
     }
   ]
+});
+
+User.belongsTo(Role, { 
+  foreignKey: 'roleId', 
+  as: 'role',
+  constraints: false
+});
+Role.hasMany(User, { 
+  foreignKey: 'roleId', 
+  as: 'users',
+  constraints: false
 });
 
 export default User;

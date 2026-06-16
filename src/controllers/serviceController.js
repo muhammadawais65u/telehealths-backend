@@ -195,7 +195,7 @@ export const createService = async (req, res) => {
       keywords,
       image,
       shortDescription,
-      content,
+      content: content || null,
       status: status || 'draft',
       userId: req.user.id,
       badge,
@@ -368,7 +368,7 @@ export const updateService = async (req, res) => {
       keywords: keywords !== undefined ? keywords : service.keywords,
       image: req.file ? req.file.filename : service.image,
       shortDescription: shortDescription !== undefined ? shortDescription : service.shortDescription,
-      content: content || service.content,
+      content: content || service.content || null,
       status: status || service.status,
       badge: badge !== undefined ? badge : service.badge,
       heroDescription: heroDescription !== undefined ? heroDescription : service.heroDescription,
@@ -470,7 +470,7 @@ export const serviceValidation = [
     .notEmpty().withMessage('Title is required')
     .isLength({ min: 3, max: 255 }).withMessage('Title must be between 3 and 255 characters'),
   body('content')
-    .notEmpty().withMessage('Content is required'),
+    .optional({ checkFalsy: true }),
   body('status')
     .optional()
     .isIn(['draft', 'published']).withMessage('Status must be either draft or published')

@@ -11,13 +11,20 @@ const sync = async () => {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
     
+    console.log('Dropping tables with foreign key constraints...');
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await sequelize.query('DROP TABLE IF EXISTS blogs');
+    await sequelize.query('DROP TABLE IF EXISTS blog_categories');
+    
+    console.log('Syncing database...');
+    await sequelize.sync({ alter: true });
+    console.log('Database synced successfully!');
+    
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    
     console.log('Seeding roles and permissions...');
     await seedRolesAndPermissions();
     console.log('Roles and permissions seeded successfully!');
-    
-    console.log('Syncing database...');
-    await sequelize.sync({ alter: false });
-    console.log('Database synced successfully!');
     
     process.exit(0);
   } catch (error) {

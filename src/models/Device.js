@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db.js';
 
-const Service = sequelize.define('Service', {
+const Device = sequelize.define('Device', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -57,7 +57,7 @@ const Service = sequelize.define('Service', {
     type: DataTypes.TEXT('long'),
     allowNull: true
   },
-  // Service-specific fields
+  // Device-specific fields
   badge: {
     type: DataTypes.STRING(100),
     allowNull: true
@@ -69,6 +69,10 @@ const Service = sequelize.define('Service', {
   },
   tags: {
     type: DataTypes.TEXT,
+    allowNull: true
+  },
+  price: {
+    type: DataTypes.STRING(50),
     allowNull: true
   },
   stats: {
@@ -108,140 +112,79 @@ const Service = sequelize.define('Service', {
     type: DataTypes.JSON,
     allowNull: true
   },
-  eligibilityTag: {
+  specificationsTag: {
     type: DataTypes.STRING(100),
     allowNull: true,
-    field: 'eligibility_tag'
+    field: 'specifications_tag'
   },
-  eligibilityTitle: {
+  specificationsTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    field: 'eligibility_title'
+    field: 'specifications_title'
   },
-  eligibilityDescription: {
+  specificationsDescription: {
     type: DataTypes.TEXT,
     allowNull: true,
-    field: 'eligibility_description'
+    field: 'specifications_description'
   },
-  eligibility: {
+  specifications: {
     type: DataTypes.JSON,
     allowNull: true
   },
-  processTag: {
+  featuresTag: {
     type: DataTypes.STRING(100),
     allowNull: true,
-    field: 'process_tag'
+    field: 'features_tag'
   },
-  processTitle: {
+  featuresTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    field: 'process_title'
+    field: 'features_title'
   },
-  processDescription: {
+  featuresDescription: {
     type: DataTypes.TEXT,
     allowNull: true,
-    field: 'process_description'
+    field: 'features_description'
   },
-  process: {
+  features: {
     type: DataTypes.JSON,
     allowNull: true
   },
-  platformTag: {
+  benefitsTag: {
     type: DataTypes.STRING(100),
     allowNull: true,
-    field: 'platform_tag'
+    field: 'benefits_tag'
   },
-  platformTitle: {
+  benefitsTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    field: 'platform_title'
+    field: 'benefits_title'
   },
-  platformDescription: {
+  benefitsDescription: {
     type: DataTypes.TEXT,
     allowNull: true,
-    field: 'platform_description'
+    field: 'benefits_description'
   },
-  platform: {
+  benefits: {
     type: DataTypes.JSON,
     allowNull: true
   },
-  keyStatsTag: {
+  pricingTag: {
     type: DataTypes.STRING(100),
     allowNull: true,
-    field: 'key_stats_tag'
+    field: 'pricing_tag'
   },
-  keyStatsTitle: {
+  pricingTitle: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    field: 'key_stats_title'
+    field: 'pricing_title'
   },
-  keyStatsDescription: {
+  pricingDescription: {
     type: DataTypes.TEXT,
     allowNull: true,
-    field: 'key_stats_description'
+    field: 'pricing_description'
   },
-  keyStats: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
-  billingTag: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    field: 'billing_tag'
-  },
-  billingTitle: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    field: 'billing_title'
-  },
-  billingDescription: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-    field: 'billing_description'
-  },
-  billingCodes: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
-  whyCCNTag: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    field: 'why_ccn_tag'
-  },
-  whyCCNTitle: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    field: 'why_ccn_title'
-  },
-  whyCCNDescription: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-    field: 'why_ccn_description'
-  },
-  whyCCN: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
-  complianceTag: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-    field: 'compliance_tag'
-  },
-  complianceTitle: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    field: 'compliance_title'
-  },
-  complianceDescription: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-    field: 'compliance_description'
-  },
-  complianceNotes: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
-  commonMistakes: {
+  pricingPlans: {
     type: DataTypes.JSON,
     allowNull: true
   },
@@ -279,7 +222,7 @@ const Service = sequelize.define('Service', {
     }
   }
 }, {
-  tableName: 'services',
+  tableName: 'devices',
   timestamps: true,
   indexes: [
     {
@@ -295,4 +238,4 @@ const Service = sequelize.define('Service', {
   ]
 });
 
-export default Service;
+export default Device;
