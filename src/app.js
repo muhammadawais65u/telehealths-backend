@@ -15,6 +15,8 @@ import roleRoutes from './routes/roleRoutes.js';
 import permissionRoutes from './routes/permissionRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import deviceRoutes from './routes/deviceRoutes.js';
+import emailConfigRoutes from './routes/emailConfigRoutes.js';
+import appPasswordRoutes from './routes/appPasswordRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,6 +31,8 @@ app.use(cookieParser());
 
 // CORS middleware
 const allowedOrigins = [
+  'https://gethealthshield.com',
+  'https://www.gethealthshield.com',
   process.env.CLIENT_URL,
   'http://localhost:3000',
   'http://127.0.0.1:3000'
@@ -64,6 +68,8 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/devices', deviceRoutes);
+app.use('/api/email-config', emailConfigRoutes);
+app.use('/api/app-passwords', appPasswordRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -91,6 +97,8 @@ app.get('/', (req, res) => {
       permissions: '/api/permissions',
       blogCategories: '/api/blog-categories',
       devices: '/api/devices',
+      emailConfig: '/api/email-config',
+      appPasswords: '/api/app-passwords',
       health: '/api/health'
     }
   });

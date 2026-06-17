@@ -1,6 +1,10 @@
 import dotenv from 'dotenv';
+import dns from 'dns';
 import app from './app.js';
 import { testConnection, syncDatabase } from './config/db.js';
+
+// Force IPv4 first to avoid ENETUNREACH IPv6 errors (e.g. SMTP connections)
+dns.setDefaultResultOrder('ipv4first');
 
 // Load environment variables
 dotenv.config();

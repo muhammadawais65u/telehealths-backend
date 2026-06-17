@@ -8,6 +8,8 @@ import Role from './Role.js';
 import Permission from './Permission.js';
 import RolePermission from './RolePermission.js';
 import Device from './Device.js';
+import EmailConfig from './EmailConfig.js';
+import AppPassword from './AppPassword.js';
 
 // Define associations
 User.hasMany(Blog, {
@@ -67,4 +69,4 @@ Permission.belongsToMany(Role, {
   as: 'roles'
 });
 
-export { User, Blog, Service, Partnership, BlogCategory, Lead, Role, Permission, RolePermission, Device };
+export { User, Blog, Service, Partnership, BlogCategory, Lead, Role, Permission, RolePermission, Device, EmailConfig, AppPassword };

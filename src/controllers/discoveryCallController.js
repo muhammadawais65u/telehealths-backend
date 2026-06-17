@@ -1,7 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import { DiscoveryCall } from '../models/index.js';
 import { successResponse, createdResponse, errorResponse, paginatedResponse, notFoundResponse } from '../utils/responseHandler.js';
-import { sendEmail } from '../utils/email.js';
+import { sendEmail, getAdminEmail } from '../utils/email.js';
 
 export const discoveryCallValidation = [
   body('name').notEmpty().withMessage('Name is required'),
@@ -40,7 +40,14 @@ export const createDiscoveryCall = async (req, res) => {
 
     const call = await DiscoveryCall.create({ name, email, phone, message: message || null });
 
-    const adminEmail = process.env.ADMIN_EMAIL;
+    // Get admin email from database config, not from .env
+    let adminEmail;
+    try {
+      adminEmail = await getAdminEmail();
+    } catch (err) {
+      console.error('❌ Could not get admin email from config:', err.message);
+      return errorResponse(res, 'Email configuration not set up. Please configure email in admin panel.', 500);
+    }
 
     const userHtml = `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">

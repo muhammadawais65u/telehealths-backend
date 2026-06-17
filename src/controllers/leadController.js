@@ -1,7 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import Lead from '../models/Lead.js';
 import { successResponse, createdResponse, errorResponse, paginatedResponse, notFoundResponse } from '../utils/responseHandler.js';
-import { sendEmail } from '../utils/email.js';
+import { sendEmail, getAdminEmail } from '../utils/email.js';
 
 export const leadValidation = [
   body('name').notEmpty().withMessage('Name is required'),
@@ -47,7 +47,15 @@ export const createLead = async (req, res) => {
       insuranceCarrier: insuranceCarrier || null
     });
 
-    const adminEmail = process.env.ADMIN_EMAIL;
+    // Get admin email from database config, not from .env
+    let adminEmail;
+    try {
+      adminEmail = await getAdminEmail();
+    } catch (err) {
+      console.error('❌ Could not get admin email from config:', err.message);
+      return errorResponse(res, 'Email configuration not set up. Please configure email in admin panel.', 500);
+    }
+
     let sourceLabel = 'Landing Page';
     if (source === 'contact_us') {
       sourceLabel = 'Contact Us';
@@ -141,5 +149,56 @@ export const deleteLead = async (req, res) => {
     return successResponse(res, null, 'Lead deleted successfully');
   } catch (error) {
     return errorResponse(res, error.message || 'Error deleting lead', 500);
+  }
+};
+
+export const sendEmailToLead = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { subject, message, recipientEmail, ccEmail } = req.body;
+
+    if (!subject || !message) {
+      return errorResponse(res, 'Subject and message are required', 400);
+    }
+
+    const lead = await Lead.findByPk(id);
+    if (!lead) return notFoundResponse(res, 'Lead not found');
+
+    const emailTo = recipientEmail || lead.email;
+    if (!emailTo) {
+      return errorResponse(res, 'Lead does not have a valid email address', 400);
+    }
+
+    const emailHtml = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#1e40af,#3b82f6);padding:28px 24px;text-align:center;">
+          <h1 style="color:#fff;margin:0;font-size:22px;">Health Shield</h1>
+          <p style="color:#bfdbfe;margin:4px 0 0;font-size:13px;">Better health at home, every day.</p>
+        </div>
+        <div style="padding:28px 24px;background:#fff;">
+          <p style="color:#475569;font-size:14px;line-height:1.6;white-space:pre-wrap;">${message}</p>
+        </div>
+        <div style="background:#f8fafc;padding:16px;text-align:center;font-size:11px;color:#94a3b8;">
+          &copy; ${new Date().getFullYear()} Health Shield. All rights reserved.
+        </div>
+      </div>`;
+
+    const mailOptions = {
+      to: emailTo,
+      subject: subject,
+      html: emailHtml
+    };
+
+    // Add CC if provided
+    if (ccEmail) {
+      mailOptions.cc = ccEmail;
+    }
+
+    await sendEmail(mailOptions);
+
+    return successResponse(res, { leadId: id, sentTo: emailTo, ccEmail: ccEmail || null }, 'Email sent successfully');
+  } catch (error) {
+    console.error('Send email error:', error);
+    return errorResponse(res, error.message || 'Error sending email', 500);
   }
 };
