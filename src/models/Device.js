@@ -48,6 +48,10 @@ const Device = sequelize.define('Device', {
     type: DataTypes.STRING(500),
     allowNull: true
   },
+  images: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
   shortDescription: {
     type: DataTypes.TEXT,
     allowNull: true,
@@ -67,12 +71,23 @@ const Device = sequelize.define('Device', {
     allowNull: true,
     field: 'hero_description'
   },
+  heroTitle: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'hero_title'
+  },
+  heroButtonText: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    field: 'hero_button_text'
+  },
+  heroButtonLink: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'hero_button_link'
+  },
   tags: {
     type: DataTypes.TEXT,
-    allowNull: true
-  },
-  price: {
-    type: DataTypes.STRING(50),
     allowNull: true
   },
   stats: {
@@ -131,6 +146,11 @@ const Device = sequelize.define('Device', {
     type: DataTypes.JSON,
     allowNull: true
   },
+  specificationsImage: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'specifications_image'
+  },
   featuresTag: {
     type: DataTypes.STRING(100),
     allowNull: true,
@@ -149,6 +169,11 @@ const Device = sequelize.define('Device', {
   features: {
     type: DataTypes.JSON,
     allowNull: true
+  },
+  featuresImage: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    field: 'features_image'
   },
   benefitsTag: {
     type: DataTypes.STRING(100),
@@ -206,6 +231,11 @@ const Device = sequelize.define('Device', {
   faqs: {
     type: DataTypes.JSON,
     allowNull: true
+  },
+  relatedDevices: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    field: 'related_devices'
   },
   status: {
     type: DataTypes.ENUM('draft', 'published'),

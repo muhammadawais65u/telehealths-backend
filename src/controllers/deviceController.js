@@ -137,9 +137,20 @@ export const createDevice = async (req, res) => {
     const userId = req.user.id;
     const deviceData = { ...req.body };
 
-    // Handle uploaded image
-    if (req.file) {
-      deviceData.image = req.file.filename;
+    // Handle uploaded files
+    if (req.files) {
+      if (req.files.image && req.files.image[0]) {
+        deviceData.image = req.files.image[0].filename;
+      }
+      if (req.files.images && req.files.images.length > 0) {
+        deviceData.images = req.files.images.map(file => file.filename);
+      }
+      if (req.files.specificationsImage && req.files.specificationsImage[0]) {
+        deviceData.specificationsImage = req.files.specificationsImage[0].filename;
+      }
+      if (req.files.featuresImage && req.files.featuresImage[0]) {
+        deviceData.featuresImage = req.files.featuresImage[0].filename;
+      }
     }
 
     // Parse JSON fields that come as strings from FormData
@@ -148,6 +159,12 @@ export const createDevice = async (req, res) => {
     }
     if (deviceData.features !== undefined) {
       deviceData.features = parseJsonField(deviceData.features);
+    }
+    if (deviceData.faqs !== undefined) {
+      deviceData.faqs = parseJsonField(deviceData.faqs);
+    }
+    if (deviceData.relatedDevices !== undefined) {
+      deviceData.relatedDevices = parseJsonField(deviceData.relatedDevices);
     }
 
     // Generate unique slug if not provided
@@ -186,9 +203,20 @@ export const updateDevice = async (req, res) => {
       return notFoundResponse(res, 'Device not found');
     }
 
-    // Handle uploaded image
-    if (req.file) {
-      deviceData.image = req.file.filename;
+    // Handle uploaded files
+    if (req.files) {
+      if (req.files.image && req.files.image[0]) {
+        deviceData.image = req.files.image[0].filename;
+      }
+      if (req.files.images && req.files.images.length > 0) {
+        deviceData.images = req.files.images.map(file => file.filename);
+      }
+      if (req.files.specificationsImage && req.files.specificationsImage[0]) {
+        deviceData.specificationsImage = req.files.specificationsImage[0].filename;
+      }
+      if (req.files.featuresImage && req.files.featuresImage[0]) {
+        deviceData.featuresImage = req.files.featuresImage[0].filename;
+      }
     }
 
     // Parse JSON fields that come as strings from FormData
@@ -197,6 +225,12 @@ export const updateDevice = async (req, res) => {
     }
     if (deviceData.features !== undefined) {
       deviceData.features = parseJsonField(deviceData.features);
+    }
+    if (deviceData.faqs !== undefined) {
+      deviceData.faqs = parseJsonField(deviceData.faqs);
+    }
+    if (deviceData.relatedDevices !== undefined) {
+      deviceData.relatedDevices = parseJsonField(deviceData.relatedDevices);
     }
 
     // Generate new slug if title changed and slug not provided

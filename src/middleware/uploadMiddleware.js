@@ -79,7 +79,7 @@ export const uploadSingle = (fieldName) => {
 export const uploadMultiple = (fieldName, maxCount = 5) => {
   return (req, res, next) => {
     const uploadHandler = upload.array(fieldName, maxCount);
-    
+
     uploadHandler(req, res, (err) => {
       if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
@@ -104,8 +104,46 @@ export const uploadMultiple = (fieldName, maxCount = 5) => {
           message: err.message
         });
       }
-      
+
       next();
     });
   };
+};
+
+// Mixed file upload (single + multiple fields)
+export const uploadDeviceFiles = (req, res, next) => {
+  const uploadHandler = upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'images', maxCount: 10 },
+    { name: 'specificationsImage', maxCount: 1 },
+    { name: 'featuresImage', maxCount: 1 }
+  ]);
+
+  uploadHandler(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({
+          success: false,
+          message: 'File size exceeds the limit (5MB)'
+        });
+      }
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        return res.status(400).json({
+          success: false,
+          message: 'Too many files uploaded'
+        });
+      }
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    } else if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
+
+    next();
+  });
 };
