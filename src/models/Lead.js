@@ -37,9 +37,14 @@ const Lead = sequelize.define('Lead', {
     allowNull: true
   },
   source: {
-    type: DataTypes.ENUM('landing_page', 'contact_us', 'funnel', 'eligibility'),
+    type: DataTypes.ENUM('landing_page', 'contact_us', 'funnel', 'eligibility', 'device'),
     allowNull: false,
     defaultValue: 'landing_page'
+  },
+  deviceName: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    field: 'device_name'
   },
   leadStatus: {
     type: DataTypes.ENUM('new', 'contacted', 'qualified', 'closed'),

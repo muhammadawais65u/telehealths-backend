@@ -20,8 +20,8 @@ router.get('/:slug', getDeviceBySlug);
 
 // Private routes (require authentication)
 router.get('/id/:id', authenticate, getDeviceById);
-router.post('/', authenticate, authorize(['admin']), uploadDeviceFiles, deviceValidation, validate, createDevice);
-router.put('/:id', authenticate, authorize(['admin']), uploadDeviceFiles, deviceValidation, validate, updateDevice);
+router.post('/', authenticate, authorize(['admin']), uploadDeviceFiles, createDevice);
+router.put('/:id', authenticate, authorize(['admin']), uploadDeviceFiles, updateDevice);
 router.delete('/:id', authenticate, authorize(['admin']), deleteDevice);
 
 export default router;

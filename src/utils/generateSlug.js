@@ -35,14 +35,36 @@ export const generateUniqueSlug = (text, existingSlugs = []) => {
   let baseSlug = generateSlug(text);
   let slug = baseSlug;
   let counter = 1;
-  
+
   // Keep incrementing counter until we find a unique slug
   while (existingSlugs.includes(slug)) {
     slug = `${baseSlug}-${counter}`;
     counter++;
   }
-  
+
   return slug;
+};
+
+/**
+ * Generate unique slug by checking against database model
+ * @param {Model} model - Sequelize model to check against
+ * @param {string} text - Text to convert to slug
+ * @returns {Promise<string>} - Unique slug
+ */
+export const generateUniqueSlugFromModel = async (model, text) => {
+  let baseSlug = generateSlug(text);
+  let slug = baseSlug;
+  let counter = 1;
+
+  // Keep incrementing counter until we find a unique slug in the database
+  while (true) {
+    const existing = await model.findOne({ where: { slug } });
+    if (!existing) {
+      return slug;
+    }
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
 };
 
 /**

@@ -1,7 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import { Device, User } from '../models/index.js';
 import { Op } from 'sequelize';
-import { generateUniqueSlug } from '../utils/generateSlug.js';
+import { generateUniqueSlugFromModel } from '../utils/generateSlug.js';
 import { successResponse, createdResponse, notFoundResponse, errorResponse, paginatedResponse } from '../utils/responseHandler.js';
 
 // @desc    Get all devices with pagination and search
@@ -129,13 +129,29 @@ const parseJsonField = (value) => {
 // @access  Private
 export const createDevice = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return errorResponse(res, 'Validation failed', 400, errors.array());
+    console.log('=== Create Device Request ===');
+    console.log('Body:', req.body);
+    console.log('Files:', req.files);
+    console.log('User:', req.user);
+    console.log('============================');
+
+    // Manual validation for FormData
+    if (!req.body.title || req.body.title.trim().length < 3) {
+      return errorResponse(res, 'Title is required and must be at least 3 characters', 400);
+    }
+    if (req.body.slug && req.body.slug.length < 3) {
+      return errorResponse(res, 'Slug must be at least 3 characters', 400);
+    }
+    if (req.body.status && !['draft', 'published'].includes(req.body.status)) {
+      return errorResponse(res, 'Status must be either draft or published', 400);
     }
 
     const userId = req.user.id;
     const deviceData = { ...req.body };
+
+    console.log('=== Device Data Before Processing ===');
+    console.log('All fields:', Object.keys(deviceData));
+    console.log('=====================================');
 
     // Handle uploaded files
     if (req.files) {
@@ -169,17 +185,22 @@ export const createDevice = async (req, res) => {
 
     // Generate unique slug if not provided
     if (!deviceData.slug) {
-      deviceData.slug = await generateUniqueSlug(Device, deviceData.title);
+      deviceData.slug = await generateUniqueSlugFromModel(Device, deviceData.title);
     }
 
     // Add user ID
     deviceData.userId = userId;
+
+    console.log('=== Creating Device with Data ===');
+    console.log('Device data keys:', Object.keys(deviceData));
+    console.log('==================================');
 
     const device = await Device.create(deviceData);
 
     return createdResponse(res, device, 'Device created successfully');
   } catch (error) {
     console.error('Create device error:', error);
+    console.error('Error details:', error.errors);
     return errorResponse(res, error.message || 'Error creating device', 500);
   }
 };
@@ -189,9 +210,15 @@ export const createDevice = async (req, res) => {
 // @access  Private
 export const updateDevice = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return errorResponse(res, 'Validation failed', 400, errors.array());
+    // Manual validation for FormData
+    if (req.body.title && req.body.title.trim().length < 3) {
+      return errorResponse(res, 'Title must be at least 3 characters', 400);
+    }
+    if (req.body.slug && req.body.slug.length < 3) {
+      return errorResponse(res, 'Slug must be at least 3 characters', 400);
+    }
+    if (req.body.status && !['draft', 'published'].includes(req.body.status)) {
+      return errorResponse(res, 'Status must be either draft or published', 400);
     }
 
     const { id } = req.params;
@@ -235,7 +262,7 @@ export const updateDevice = async (req, res) => {
 
     // Generate new slug if title changed and slug not provided
     if (deviceData.title && deviceData.title !== device.title && !deviceData.slug) {
-      deviceData.slug = await generateUniqueSlug(Device, deviceData.title);
+      deviceData.slug = await generateUniqueSlugFromModel(Device, deviceData.title);
     }
 
     await device.update(deviceData);

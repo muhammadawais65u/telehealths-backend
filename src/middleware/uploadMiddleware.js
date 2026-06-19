@@ -112,6 +112,10 @@ export const uploadMultiple = (fieldName, maxCount = 5) => {
 
 // Mixed file upload (single + multiple fields)
 export const uploadDeviceFiles = (req, res, next) => {
+  console.log('=== Upload Device Files Middleware ===');
+  console.log('Content-Type:', req.get('Content-Type'));
+  console.log('=======================================');
+
   const uploadHandler = upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'images', maxCount: 10 },
@@ -121,6 +125,7 @@ export const uploadDeviceFiles = (req, res, next) => {
 
   uploadHandler(req, res, (err) => {
     if (err instanceof multer.MulterError) {
+      console.log('Multer Error:', err);
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).json({
           success: false,
@@ -138,12 +143,14 @@ export const uploadDeviceFiles = (req, res, next) => {
         message: err.message
       });
     } else if (err) {
+      console.log('Upload Error:', err);
       return res.status(400).json({
         success: false,
         message: err.message
       });
     }
 
+    console.log('Upload successful, files:', req.files);
     next();
   });
 };
